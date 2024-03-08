@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,54 +16,66 @@ import java.util.List;
 
 public class AutomatedRegistration {
   private static final String URL = "https://selenium-ifnmg.mailchimpsites.com/contact";
-  private static final String FILE_PATH = "test.txt";
+  private static final String FILE_PATH = "data.txt";
 
   public static void main(String[] args) throws InterruptedException {
 
     WebDriver driver = new ChromeDriver();
     List<User> users = readDataFile(FILE_PATH);
     driver.get(URL);
-    Thread.sleep(2000);
+    Thread.sleep(5000);
 
     // Cadastrar cada usuário
     for (User user : users) {
-      WebElement inputEmail = driver.findElement(By.id("mce136i9_EMAIL"));
-      inputEmail.sendKeys(user.getEmail());
+      try {
 
-      WebElement inputNome = driver.findElement(By.id("mce136i9_FNAME"));
-      inputNome.sendKeys(user.getNome());
+        WebElement inputEmail = driver.findElement(By.id("mce136i9_EMAIL"));
+        inputEmail.sendKeys(user.getEmail());
 
-      WebElement inputSobrenome = driver.findElement(By.id("mce136i9_LNAME"));
-      inputNome.sendKeys(User.getSobrenome());
+        WebElement inputNome = driver.findElement(By.id("mce136i9_FNAME"));
+        inputNome.sendKeys(user.getNome());
 
-      WebElement inputEndereco = driver.findElement(By.id("mce136i9_ADDRESS-addr1"));
-      inputNome.sendKeys(user.getAddress());
+        WebElement inputSobrenome = driver.findElement(By.id("mce136i9_LNAME"));
+        inputSobrenome.sendKeys(User.getSobrenome());
 
-      WebElement inputAddressLine2 = driver.findElement(By.id("mce136i9_ADDRESS-addr2"));
-      inputNome.sendKeys(user.getAddress2());
+        WebElement inputEndereco = driver.findElement(By.id("mce136i9_ADDRESS-addr1"));
+        inputEndereco.sendKeys(user.getAddress());
 
-      WebElement inputCity = driver.findElement(By.id("mce136i9_ADDRESS-city"));
-      inputNome.sendKeys(user.getCity());
+        WebElement inputAddressLine2 = driver.findElement(By.id("mce136i9_ADDRESS-addr2"));
+        inputAddressLine2.sendKeys(user.getAddress2());
 
-      WebElement inputState = driver.findElement(By.id("mce136i9_ADDRESS-state"));
-      inputNome.sendKeys(user.getState());
+        WebElement inputCity = driver.findElement(By.id("mce136i9_ADDRESS-city"));
+        inputCity.sendKeys(user.getCity());
 
-      WebElement inputZipCode = driver.findElement(By.id("mce136i9_ADDRESS-zip"));
-      inputNome.sendKeys(user.getZipcode());
+        WebElement inputState = driver.findElement(By.id("mce136i9_ADDRESS-state"));
+        inputState.sendKeys(user.getState());
 
-      WebElement inputCountry = driver.findElement(By.id("mce136i9_ADDRESS-country"));
-      inputNome.sendKeys(user.getCountry());
+        WebElement inputZipCode = driver.findElement(By.id("mce136i9_ADDRESS-zip"));
+        inputZipCode.sendKeys(user.getZipcode());
 
-      WebElement inputTelefone = driver.findElement(By.id("mce136i9_PHONE"));
-      inputNome.sendKeys(user.getTelefone());
+        WebElement inputCountry = driver.findElement(By.id("mce136i9_ADDRESS-country"));
+        Select optionCountry = new Select(inputCountry);
+        optionCountry.selectByVisibleText("Brazil");
 
-      WebElement inputBirthday = driver.findElement(By.id("mce136i9_BIRTHDAY"));
-      inputNome.sendKeys(user.getBirthday());
+        WebElement inputTelefone = driver.findElement(By.id("mce136i9_PHONE"));
+        inputTelefone.sendKeys(user.getTelefone());
 
+        WebElement inputBirthday = driver.findElement(By.id("mce136i9_BIRTHDAY"));
+        inputBirthday.sendKeys(user.getBirthday());
 
-      WebElement buttonSubscribe = driver.findElement(By.cssSelector("input[type='submit']"));
-      buttonSubscribe.click();
+        WebElement buttonSubscribe = driver.findElement(By.cssSelector("[type='submit']"));
+        buttonSubscribe.click();
+
+        driver.navigate().refresh();
+        Thread.sleep(5000);
+
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        break;
+      }
     }
+
+    driver.quit();
   }
 
   private static List<User> readDataFile(String path) {
@@ -74,9 +87,8 @@ public class AutomatedRegistration {
       while ((line = br.readLine()) != null) {
         String[] data = line.split(",");
         System.err.println(data);
-        User user =
-                new User(data[0], data[1], data[2], data[3], data[4],
-                        data[5], data[6], data[7], data[8], data[9], data[10]);
+        User user = new User(data[0], data[1], data[2], data[3], data[4],
+            data[5], data[6], data[7], data[8], data[9]);
         users.add(user);
       }
     } catch (IOException ex) {
