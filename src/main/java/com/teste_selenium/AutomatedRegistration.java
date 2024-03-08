@@ -55,7 +55,7 @@ public class AutomatedRegistration {
 
         WebElement inputCountry = driver.findElement(By.id("mce136i9_ADDRESS-country"));
         Select optionCountry = new Select(inputCountry);
-        optionCountry.selectByVisibleText("Brazil");
+        optionCountry.selectByVisibleText("USA");
 
         WebElement inputTelefone = driver.findElement(By.id("mce136i9_PHONE"));
         inputTelefone.sendKeys(user.getTelefone());
